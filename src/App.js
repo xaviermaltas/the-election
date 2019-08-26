@@ -24,51 +24,59 @@ export class App extends Component {
         }
     }
 
+    //Component que es carrega una única vegada despres d'inicialitzar la pàgina
     async componentDidMount(){
-        this.web3 = await getWeb3();
-        console.log('Your web3 provider version is: ' + this.web3.version);
+        // Web3 Provider 
+            this.web3 = await getWeb3();
+
+        //Web3 Provider Version    
+            console.log('Your web3 provider version is: ' + this.web3.version);
         
         console.log("Current Provider");
         console.log(this.web3.currentProvider);
         
-        var account = ( await this.web3.eth.getAccounts() )[0];
-        console.log('Your account is: ' + account);
+
+        //Metamask Account
+            var account = ( await this.web3.eth.getAccounts() )[0];
+            console.log('Your account is: ' + account);
 
         //Here we define an Instance of our Election Smart Contract
-        this.election = await ElectionContract(this.web3.currentProvider);
+            this.election = await ElectionContract(this.web3.currentProvider);
 
-        this.toEther = converter(this.web3);
+        //Conversion from wey to Eth
+            this.toEther = converter(this.web3);
 
-        this.votationService = new VotationService(this.election);
+        //Creation of an instance of VotationService class
+            this.votationService = new VotationService(this.election);
 
-        //Get the network Id
-        web3.version.getNetwork((err, netId) => {
-            console.log('Network ID : ' + netId);
-        })
+        //Get and print the network Id
+            web3.version.getNetwork((err, netId) => {
+                console.log('Network ID : ' + netId);
+            })
         
         //Subscripcio a un event de votacio
-        let voteEmited = this.election.VoteEmited();
-        console.log(voteEmited);
-        voteEmited.watch( function(error, result) {
+            let voteEmited = this.election.VoteEmited();
+            console.log(voteEmited);
+            voteEmited.watch( function(error, result) {
 
-            if(!error){
-                const{ voter, candidateId , candidateName} = result.args;
-                console.log(voter);
+                if(!error){
+                    const{ voter, candidateId , candidateName} = result.args;
+                    console.log(voter);
 
-                if( voter === this.state.account ){
-                    this.container.success('You purchased a flight to ' + candidateName +' with a cost of ', 'Flight Selling');
+                    if( voter === this.state.account ){
+                        this.container.success('You purchased a flight to ' + candidateName +' with a cost of ', 'Flight Selling');
+                    }
+                    
+                    this.container.success( candidateName +' with a cost of ', 'Flight Selling');
+                    console.log('The voter ' + voter + ', voted to : ' + candidateName);
+
+                }
+                else{
+                    console.log("App.js Error");
+                    console.log(error);
                 }
                 
-                this.container.success( candidateName +' with a cost of ', 'Flight Selling');
-                console.log('The voter ' + voter + ', voted to : ' + candidateName);
-
-            }
-            else{
-                console.log("App.js Error");
-                console.log(error);
-            }
-            
-        }.bind(this));
+            }.bind(this));
 
 
        
