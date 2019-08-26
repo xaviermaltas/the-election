@@ -13,6 +13,8 @@ const getWeb3 = () => {
 
             if(typeof web3 !== undefined){
                 web3 = new Web3(web3.currentProvider);
+                console.log("Web 3 Provider Info Below");
+                console.log(web3);
                 resolve(web3);
             }
             else{
