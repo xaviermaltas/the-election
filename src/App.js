@@ -51,38 +51,56 @@ export class App extends Component {
         console.log(voteEmited);
         voteEmited.watch( function(error, result) {
 
-            const {voter, candidateId , candidateName} = result.args;
-            console.log(voter);
+            if(!error){
+                const{ voter, candidateId , candidateName} = result.args;
+                console.log(voter);
 
-            if( voter === this.state.account ){
-                this.container.success('You purchased a flight to ' + candidateName +' with a cost of ', 'Flight Selling');
+                if( voter === this.state.account ){
+                    this.container.success('You purchased a flight to ' + candidateName +' with a cost of ', 'Flight Selling');
+                }
+                
+                this.container.success( candidateName +' with a cost of ', 'Flight Selling');
+                console.log('The voter ' + voter + ', voted to : ' + candidateName);
+
+            }
+            else{
+                console.log("App.js Error");
+                console.log(error);
             }
             
-            this.container.success( candidateName +' with a cost of ', 'Flight Selling');
-            console.log('The voter ' + voter + ', voted to : ' + candidateName);
-
         }.bind(this));
 
 
-        //Subscripo al event del canvi de compte
-        //Actualització de valors, tornant a executar this.load()
-        this.web3.currentProvider.publicConfigStore.on('update', async function(event){
-            this.setState({
-                account : event.selectedAddress.toLowerCase()
-            }, () => {
-                this.load();
-            });
-        }.bind(this));
+       
 
-        this.setState({
-                account : account.toLowerCase()
-            }, 
-                //Callback. Load the app while the account is setted
-                ()=>{
-                    //Method for initializing our app
+        if(account){
+
+            //Subscripcio al event del canvi de compte
+            //Actualització de valors, tornant a executar this.load()
+            this.web3.currentProvider.publicConfigStore.on('update', async function(event){
+                this.setState({
+                    account : event.selectedAddress.toLowerCase()
+                }, () => {
                     this.load();
-                }
-        );
+                });
+            }.bind(this));
+    
+    
+            this.setState({
+                    account : account.toLowerCase()
+                    // account : account
+                }, 
+                    //Callback. Load the app while the account is setted
+                    ()=>{
+                        //Method for initializing our app
+                        this.load();
+                    }
+            );
+        }else{
+            console.log("No account found");
+        }
+
+        
     }
 
     async getBalance(){
