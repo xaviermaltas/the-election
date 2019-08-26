@@ -125,7 +125,8 @@ export class App extends Component {
         var candidateId = ((y[x].index)+1);
         var candidateName =  y[x].text;
         
-        alert("Index : " + (candidateId) + " is " + (candidateName) );
+        //alert("Index : " + (candidateId) + " is " + (candidateName) );
+        alert("Your vote is for : " + (candidateName) + " with index " + (candidateId));
 
         await this.votationService.voteForACandidate( (candidateId), this.state.account );
     }
