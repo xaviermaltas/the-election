@@ -28,6 +28,9 @@ export class App extends Component {
         this.web3 = await getWeb3();
         console.log('Your web3 provider version is: ' + this.web3.version);
         
+        console.log("Current Provider");
+        console.log(this.web3.currentProvider);
+        
         var account = ( await this.web3.eth.getAccounts() )[0];
         console.log('Your account is: ' + account);
 
