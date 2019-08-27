@@ -1,7 +1,8 @@
 # The Election - An Ethereum Voting DAPP
+<img src="http://introtocrypto.com/wp-content/uploads/2017/08/ether@2x.png" height="128" width="128">
 
 Source code of an Ethereum Voting Application.
-<img src="http://introtocrypto.com/wp-content/uploads/2017/08/ether@2x.png" height="128" width="128">
+
 Developed with :
 
     Solidity
@@ -26,5 +27,10 @@ __DAPP EXECUTION WITH GANACHE GUI__
 
 __New Users__
 
-Un cop tenim totes les dependencies instalades (code: npm install), web3 funcionant correctament, Metamask i el web app aixecat,
-al navegador, em de posar a la consola ethereum.enable() per tal de permetre que Metamask pugi interactuar amb la nostra pagina.
+```
+1| Install Dependencies -> npm install
+2| Check if web3 is installed and works correctly
+3| Install Metamsk
+4| Bring up the web page -> npm start
+5| Activate Ethereum-Metamask interaction -> At the browser console -> ethereum.enable()
+```
