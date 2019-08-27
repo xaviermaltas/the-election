@@ -18,7 +18,7 @@ __DAPP EXECUTION WITH GANACHE GUI__
 1 ) Open Ganache GUI
 2 ) truffle deploy --reset
 3 ) Open Web App -> npm start
-4 ) Clean Metamask accounts 
+4 ) Clean Metamask accounts
 5 ) Profit :)
 ```
 
@@ -26,5 +26,5 @@ __DAPP EXECUTION WITH GANACHE GUI__
 
 __New Users__
 
-Un cop tenim totes les dependencies instalades (npm install), web3 funcionant correctament, Metamask i el web app aixecat, 
+Un cop tenim totes les dependencies instalades (code: npm install), web3 funcionant correctament, Metamask i el web app aixecat, 
 al navegador, em de posar a la consola ethereum.enable() per tal de permetre que Metamask pugi interactuar amb la nostra pagina.
