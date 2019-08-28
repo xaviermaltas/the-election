@@ -26,15 +26,15 @@ export class App extends Component {
 
     //Component que es carrega una única vegada despres d'inicialitzar la pàgina
     async componentDidMount(){
-        // Web3 Provider 
+        // Web3 Provider
             this.web3 = await getWeb3();
 
-        //Web3 Provider Version    
+        //Web3 Provider Version
             console.log('Your web3 provider version is: ' + this.web3.version);
-        
-        console.log("Current Provider");
-        console.log(this.web3.currentProvider);
-        
+
+        //console.log("Current Provider");
+        //console.log(this.web3.currentProvider);
+
 
         //Metamask Account
             var account = ( await this.web3.eth.getAccounts() )[0];
@@ -53,7 +53,7 @@ export class App extends Component {
             web3.version.getNetwork((err, netId) => {
                 console.log('Network ID : ' + netId);
             })
-        
+
         //Subscripcio a un event de votacio
             let voteEmited = this.election.VoteEmited();
             console.log(voteEmited);
@@ -66,7 +66,7 @@ export class App extends Component {
                     if( voter === this.state.account ){
                         this.container.success('You purchased a flight to ' + candidateName +' with a cost of ', 'Flight Selling');
                     }
-                    
+
                     this.container.success( candidateName +' with a cost of ', 'Flight Selling');
                     console.log('The voter ' + voter + ', voted to : ' + candidateName);
 
@@ -75,11 +75,11 @@ export class App extends Component {
                     console.log("App.js Error");
                     console.log(error);
                 }
-                
+
             }.bind(this));
 
 
-       
+
 
         if(account){
 
@@ -92,12 +92,12 @@ export class App extends Component {
                     this.load();
                 });
             }.bind(this));
-    
-    
+
+
             this.setState({
                     account : account.toLowerCase()
                     // account : account
-                }, 
+                },
                     //Callback. Load the app while the account is setted
                     ()=>{
                         //Method for initializing our app
@@ -108,7 +108,7 @@ export class App extends Component {
             console.log("No account found");
         }
 
-        
+
     }
 
     async getBalance(){
@@ -132,7 +132,7 @@ export class App extends Component {
 
         var candidateId = ((y[x].index)+1);
         var candidateName =  y[x].text;
-        
+
         //alert("Index : " + (candidateId) + " is " + (candidateName) );
         alert("Your vote is for : " + (candidateName) + " with index " + (candidateId));
 
@@ -160,7 +160,7 @@ export class App extends Component {
                 <h4 className="display-4">Voting Application</h4>
             </div>
 
-            <div className = "row"> 
+            <div className = "row">
                 <div className = "col-sm">
 
                     <Panel title = "Your Account">
@@ -169,7 +169,7 @@ export class App extends Component {
                     </Panel>
 
                 </div>
-            </div> 
+            </div>
 
             <div id = "votationResults" className = "row">
                 <div className = "col-sm">
@@ -186,13 +186,13 @@ export class App extends Component {
                             </thead>
                             <tbody id="candidatesResults">
                                 {
-                                    this.state.candidates.map( (candidate, i) => {   
+                                    this.state.candidates.map( (candidate, i) => {
                                         // debugger;
                                         return <tr key = {i}>
                                             <td>{candidate.id}</td>
                                             <td>{candidate.name}</td>
                                             <td>{candidate.voteCounter}</td>
-                                        </tr>    
+                                        </tr>
                                     })
                                 }
                             </tbody>
@@ -233,7 +233,7 @@ export class App extends Component {
 
             </div>
 
-            <ToastContainer ref= { (input) => this.container = input } 
+            <ToastContainer ref= { (input) => this.container = input }
                 className = "toast-top-right"
             />
 
