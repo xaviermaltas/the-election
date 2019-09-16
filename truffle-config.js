@@ -29,6 +29,15 @@ module.exports = {
       type: "quorum",
     },
 
+    mainAlastria: {
+      host: "localhost",
+      port: 22000,
+      network_id: "*", // Match any network id
+      gas: 0xfffff,
+      gasPrice: 0x0,
+      type: "quorum"
+    },
+
     general1: {
      host: "127.0.0.1",
      port: 22001,
@@ -36,6 +45,7 @@ module.exports = {
      gas: 0xfffff,
      gasPrice: 0x0,
      type: "quorum",
+     from: "0x0e596199ea5c6d3cbc713183e7514be022a19385" //Required for deploying at the Alastria Network
    },
 
    general2: {
