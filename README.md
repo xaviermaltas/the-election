@@ -10,7 +10,15 @@ Developed with :
     HTML5
     CSS
 
+  __New Users__
 
+  ```
+  1| Install Dependencies -> npm install
+  2| Check if web3 is installed and works correctly
+  3| Install Metamsk
+  4| Bring up the web page -> npm start
+  5| Activate Ethereum-Metamask interaction -> At the browser console -> ethereum.enable()
+  ```
 
 ********************************
 __DAPP EXECUTION WITH GANACHE GUI__
@@ -23,14 +31,13 @@ __DAPP EXECUTION WITH GANACHE GUI__
 5 ) Profit :)
 ```
 
-
-
-__New Users__
-
+********************************
+__DAPP EXECUTION WITH A PRIVATE NET__
+********************************
 ```
-1| Install Dependencies -> npm install
-2| Check if web3 is installed and works correctly
-3| Install Metamsk
-4| Bring up the web page -> npm start
-5| Activate Ethereum-Metamask interaction -> At the browser console -> ethereum.enable()
+1 ) Lift up the network and attach to a node
+2 ) truffle compile
+3 ) truffle migrate --network <networkName>
+4 ) npm start
+5 ) Profit :)
 ```
