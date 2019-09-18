@@ -45,7 +45,7 @@ module.exports = {
      gas: 0xfffff,
      gasPrice: 0x0,
      type: "quorum",
-     from: "0x0e596199ea5c6d3cbc713183e7514be022a19385" //Required for deploying at the Alastria Network
+     from: "0x74d4c56d8dcbc10a567341bfac6da0a8f04dc41d" //Required for deploying at the Alastria Network
    },
 
    general2: {
