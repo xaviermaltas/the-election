@@ -1,6 +1,8 @@
 pragma solidity ^0.4.24;
 
-contract Election{
+import "./Ownable.sol";
+
+contract Election is Ownable{
     address public owner;
     uint public candidatesCount;
     uint public totalVotes;
@@ -75,10 +77,8 @@ contract Election{
         Candidate storage candidate = candidates[candidateId];
         return candidate.voteCounter;
     }
-    
-    modifier isOwner(){
-        require(owner == msg.sender);
-        _;
-    }
 
+    
+
+    
 }

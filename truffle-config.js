@@ -1,7 +1,7 @@
 module.exports = {
   rpc: {
     host:"localhost",
-    port:8543
+    port:22000
   },
 
   networks: {
@@ -46,17 +46,26 @@ module.exports = {
      gasPrice: 0x0,
      type: "quorum",
      from: "0x74d4c56d8dcbc10a567341bfac6da0a8f04dc41d" //Required for deploying at the Alastria Network
-   },
+    },
 
-   general2: {
-     host: "127.0.0.1",
-     port: 22002,
-     network_id: "*", // Match any network id
-     gas: 0xfffff,
-     gasPrice: 0x0,
-     type: "quorum",
-     from: "0x0e596199ea5c6d3cbc713183e7514be022a19385"
-   }
+    general2: {
+      host: "127.0.0.1",
+      port: 22002,
+      network_id: "*", // Match any network id
+      gas: 0xfffff,
+      gasPrice: 0x0,
+      type: "quorum",
+      from: "0x0e596199ea5c6d3cbc713183e7514be022a19385"
+    },
+
+    quorumNet: {
+      host: "localhost",
+      port: 22000, // was 8545
+      network_id: 9354, // Match any network id
+      gasPrice: 0x0,
+      gas: 0xfffff,
+      type: "quorum" // needed for Truffle to support Quorum
+    }
 
 
   },

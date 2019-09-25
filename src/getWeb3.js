@@ -1,7 +1,10 @@
-//Modul que ens serveix retornar una promesa asyncrona
+//Modul que es focalitza en el provider (Metamask)
+
+//Ens serveix retornar una promesa asyncrona
 //tal que ens estem registrant per rebre una notificació quan
 //el DOM dispara un event load, tal que ens asegura que 
 //Metamask s'ha carregat com a extensió
+
 
 import Web3 from 'web3';
 

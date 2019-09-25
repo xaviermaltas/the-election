@@ -41,8 +41,9 @@ export class VotationService {
 
     async voteForACandidate(candidateId, from){
         // return this.contract.voteForCandidate(candidateId, {from});
+        //debugger;
         var value = 0;
-        // console.log(from + "is trying to vote to the candidate" + candidateId );
+        console.log(from + "is trying to vote to the candidate " + candidateId );
         return this.contract.voteForCandidate(candidateId, {from, value} );
     }
 }
