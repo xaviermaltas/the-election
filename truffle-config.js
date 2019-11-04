@@ -5,6 +5,8 @@ module.exports = {
   },
 
   networks: {
+
+    /* GANACHE */ 
     ganacheGUI: {
       host: 'localhost',
       port: 7545,
@@ -19,6 +21,8 @@ module.exports = {
       gas: 5000000
     },
 
+
+    /* PRIVATE NETWORK PROJECT */ 
     privateNetwork: {
       host: "localhost", //our network is running on localhost
       port: 8543, // port where your blockchain is running
@@ -29,6 +33,7 @@ module.exports = {
       type: "quorum",
     },
 
+    /* ALASTRIA PROJECT */ 
     mainAlastria: {
       host: "localhost",
       port: 22000,
@@ -39,15 +44,15 @@ module.exports = {
     },
 
     general1: {
-     host: "127.0.0.1",
-     port: 22001,
-     network_id: 83584648538, // Match any network id
-     gas: 0xfffff,
-     gasPrice: 0x0,
-     type: "quorum",
-     from: "0x74d4c56d8dcbc10a567341bfac6da0a8f04dc41d" //Required for deploying at the Alastria Network
+      host: "127.0.0.1",
+      port: 22001,
+      network_id: 83584648538, // Match any network id
+      gas: 0xfffff,
+      gasPrice: 0x0,
+      type: "quorum",
+      from: "0x74d4c56d8dcbc10a567341bfac6da0a8f04dc41d" //Required for deploying at the Alastria Network
     },
-
+    
     general2: {
       host: "127.0.0.1",
       port: 22002,
@@ -57,7 +62,9 @@ module.exports = {
       type: "quorum",
       from: "0x0e596199ea5c6d3cbc713183e7514be022a19385"
     },
+    
 
+    /* QUORUM NETWORK PROJECT */ 
     quorumNet: {
       host: "localhost",
       port: 22000, // was 8545
@@ -66,7 +73,6 @@ module.exports = {
       gas: 0xfffff,
       type: "quorum" // needed for Truffle to support Quorum
     }
-
 
   },
 
