@@ -72,6 +72,15 @@ module.exports = {
       gasPrice: 0x0,
       gas: 0xfffff,
       type: "quorum" // needed for Truffle to support Quorum
+    },
+
+    /* WINDOWS PRIVATENETWORK PROJECT */
+    windowsPrivateNet: {
+      host: "localhost", //our network is running on localhost
+      port: 8543, // port where your blockchain is running
+      network_id: 9354,
+      // from: "da7e565f43edeea1a7fac8655f6a89a5d86a19d2" // use the account-id generated during the setup process
+      gas: 20000000
     }
 
   },
