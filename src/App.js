@@ -61,91 +61,92 @@ export class App extends Component {
 
 
 
-        // //Subscripcio a un event de votacio
+        //Subscripcio a un event de votacio
+            let voteEmited = this.electionInstance.VoteEmited();
+            console.log(voteEmited);
+            voteEmited.watch( function(error, result) {
+
+                if(!error){
+                    const{ voter, candidateId , candidateName} = result.args;
+                    console.log(voter);
+
+                    if( voter === this.state.account ){
+                        this.container.success('You voted to ' + candidateName +' with ID : ' + candidateId , 'Votation');
+                        console.log('The voter ' + voter + ', voted to : ' + candidateName + ' with ID : ' + candidateId);
+                    }
+
+                    // this.container.success( candidateName +' with a cost of ', 'Flight Selling');
+
+                }
+                else{
+                    console.log("App.js Error");
+                    console.log(error);
+                }
+
+            }.bind(this));
+
+
+        //Subscripcio al event del canvi de compte
+        //Actualització de valors, tornant a executar this.load()
+            if(account){
+
+                this.web3.currentProvider.publicConfigStore.on('update', async function(event){
+                    this.setState({
+                        account : event.selectedAddress.toLowerCase()
+                    }, () => {
+                        this.load();
+                    });
+                }.bind(this));
+
+
+                this.setState({
+                        account : account.toLowerCase()
+                    },
+                        //Callback. Load the app while the account is setted
+                        ()=>{
+                            //Method for initializing our app
+                            this.load();
+                        }
+                );
+            }else{
+                console.log("No account found");
+            }
+
+
+
+
+
+        // This is a test and less complex version
+        // debugger;
+
         //     let voteEmited = this.electionInstance.VoteEmited();
-        //     console.log(voteEmited);
-        //     voteEmited.watch( function(error, result) {
+        //     voteEmited.watch(function(error, result) {
 
-        //         if(!error){
-        //             const{ voter, candidateId , candidateName} = result.args;
-        //             console.log(voter);
+        //         const{ voter, candidateId , candidateName} = result.args;
 
-        //             if( voter === this.state.account ){
-        //                 this.container.success('You purchased a flight to ' + candidateName +' with a cost of ', 'Flight Selling');
-        //             }
-
-        //             this.container.success( candidateName +' with a cost of ', 'Flight Selling');
-        //             console.log('The voter ' + voter + ', voted to : ' + candidateName);
-
+        //         if(voter === this.state.account){
+        //             this.container.success('You voted to (if) ' + candidateName + candidateId, 'Voting');
         //         }
         //         else{
-        //             console.log("App.js Error");
-        //             console.log(error);
+        //             this.container.success('You voted to (else) ' + candidateName , 'Flight information' );
         //         }
 
         //     }.bind(this));
 
-        // //Subscripcio al event del canvi de compte
-        // //Actualització de valors, tornant a executar this.load()
-        //     if(account){
 
-        //         this.web3.currentProvider.publicConfigStore.on('update', async function(event){
-        //             this.setState({
-        //                 account : event.selectedAddress.toLowerCase()
-        //             }, () => {
-        //                 this.load();
-        //             });
-        //         }.bind(this));
-
-
+        //     this.web3.currentProvider.publicConfigStore.on('update', async function(event){
         //         this.setState({
-        //                 account : account.toLowerCase()
-        //             },
-        //                 //Callback. Load the app while the account is setted
-        //                 ()=>{
-        //                     //Method for initializing our app
-        //                     this.load();
-        //                 }
-        //         );
-        //     }else{
-        //         console.log("No account found");
-        //     }
+        //             account : event.selectedAddress.toLowerCase()
+        //         }, () => {
+        //             this.load();
+        //         });
+        //     }.bind(this));
 
-
-
-
-
-        //This is a test and less complex version
-        //debugger;
-
-            let voteEmited = this.electionInstance.VoteEmited();
-            voteEmited.watch(function(error, result) {
-
-                const{ voter, candidateId , candidateName} = result.args;
-
-                if(voter === this.state.account){
-                    this.container.success('You voted to (if) ' + candidateName + candidateId, 'Voting');
-                }
-                else{
-                    this.container.success('You voted to (else) ' + candidateName , 'Flight information' );
-                }
-
-            }.bind(this));
-
-
-            this.web3.currentProvider.publicConfigStore.on('update', async function(event){
-                this.setState({
-                    account : event.selectedAddress.toLowerCase()
-                }, () => {
-                    this.load();
-                });
-            }.bind(this));
-
-            this.setState({
-                account : account.toLowerCase()
-            }, () =>{
-                this.load();
-            });
+        //     this.setState({
+        //         account : account.toLowerCase()
+        //     }, () =>{
+        //         this.load();
+        //     });
 
 
 
