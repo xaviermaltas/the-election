@@ -6,7 +6,7 @@ module.exports = {
 
   networks: {
 
-    /* GANACHE */ 
+    /* GANACHE */
     ganacheGUI: {
       host: 'localhost',
       port: 7545,
@@ -22,18 +22,18 @@ module.exports = {
     },
 
 
-    /* PRIVATE NETWORK PROJECT */ 
+    /* PRIVATE NETWORK PROJECT */
     privateNetwork: {
       host: "localhost", //our network is running on localhost
-      port: 8543, // port where your blockchain is running
+      port: 21001, // port where your blockchain is running
       network_id: 9354,
       // from: "da7e565f43edeea1a7fac8655f6a89a5d86a19d2" // use the account-id generated during the setup process
-      gasPrice: 0x0,
+      //gasPrice: 0x0,
       gas: 20000000,
-      type: "quorum",
+      //type: "quorum",
     },
 
-    /* ALASTRIA PROJECT */ 
+    /* ALASTRIA PROJECT */
     mainAlastria: {
       host: "localhost",
       port: 22000,
@@ -52,7 +52,7 @@ module.exports = {
       type: "quorum",
       from: "0x74d4c56d8dcbc10a567341bfac6da0a8f04dc41d" //Required for deploying at the Alastria Network
     },
-    
+
     general2: {
       host: "127.0.0.1",
       port: 22002,
@@ -62,9 +62,9 @@ module.exports = {
       type: "quorum",
       from: "0x0e596199ea5c6d3cbc713183e7514be022a19385"
     },
-    
 
-    /* QUORUM NETWORK PROJECT */ 
+
+    /* QUORUM NETWORK PROJECT */
     quorumNet: {
       host: "localhost",
       port: 22000, // was 8545
