@@ -33,6 +33,16 @@ module.exports = {
       //type: "quorum",
     },
 
+
+    /*1 NODE GETH */
+    nodeGeth:{
+      host: "localhost",
+      port: 22000,
+      network_id: 9354,
+      gas: 20000000
+    },
+
+
     /* ALASTRIA PROJECT */
     mainAlastria: {
       host: "localhost",
