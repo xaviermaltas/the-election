@@ -33,10 +33,12 @@ export class App extends Component {
             console.log('Your web3 provider version is: ' + this.web3.version);
 
         //console.log("Current Provider");
-        //console.log(this.web3.currentProvider);
+        console.log(this.web3.currentProvider);
 
 
         //Metamask Account
+            //If u get an error at the Browser console that your account is not found
+            //Write : ethereum.enable()
             var account = ( await this.web3.eth.getAccounts() )[0];
             console.log('Your account is: ' + account);
 
