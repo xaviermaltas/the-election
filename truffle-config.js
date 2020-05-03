@@ -42,6 +42,13 @@ module.exports = {
       gas: 20000000
     },
 
+    /* ETH3 NODES NET */
+    eth3nodesNet:{
+      host:"localhost",
+      port:8501,
+      network_id:1515,
+      gas:2000000
+    },
 
     /* ALASTRIA PROJECT */
     mainAlastria: {
