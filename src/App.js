@@ -57,12 +57,6 @@ export class App extends Component {
             })
 
 
-
-
-
-
-
-
         //Subscripcio a un event de votacio
             let voteEmited = this.electionInstance.VoteEmited();
             console.log(voteEmited);
@@ -77,8 +71,6 @@ export class App extends Component {
                         console.log('The voter ' + voter + ', voted to : ' + candidateName + ' with ID : ' + candidateId);
                     }
 
-                    // this.container.success( candidateName +' with a cost of ', 'Flight Selling');
-
                 }
                 else{
                     console.log("App.js Error");
@@ -86,6 +78,7 @@ export class App extends Component {
                 }
 
             }.bind(this));
+
 
 
         //Subscripcio al event del canvi de compte
@@ -113,65 +106,6 @@ export class App extends Component {
             }else{
                 console.log("No account found");
             }
-
-
-
-
-
-        // This is a test and less complex version
-        // debugger;
-
-        //     let voteEmited = this.electionInstance.VoteEmited();
-        //     voteEmited.watch(function(error, result) {
-
-        //         const{ voter, candidateId , candidateName} = result.args;
-
-        //         if(voter === this.state.account){
-        //             this.container.success('You voted to (if) ' + candidateName + candidateId, 'Voting');
-        //         }
-        //         else{
-        //             this.container.success('You voted to (else) ' + candidateName , 'Flight information' );
-        //         }
-
-        //     }.bind(this));
-
-
-        //     this.web3.currentProvider.publicConfigStore.on('update', async function(event){
-        //         this.setState({
-        //             account : event.selectedAddress.toLowerCase()
-        //         }, () => {
-        //             this.load();
-        //         });
-        //     }.bind(this));
-
-        //     this.setState({
-        //         account : account.toLowerCase()
-        //     }, () =>{
-        //         this.load();
-        //     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         
 
