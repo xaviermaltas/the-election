@@ -21,6 +21,8 @@ export class App extends Component {
             balance : 0,
             account : undefined,
             candidates : [],
+            hasVoted : undefined,
+            voterStatus : undefined,
         }
     }
 
@@ -118,6 +120,13 @@ export class App extends Component {
         });
     }
 
+    async hasVoted(){
+        let voterHasVoted = await this.votationService.hasVoted(this.state.account);
+        this.setState({
+            hasVoted : voterHasVoted
+        });
+    }
+
     async getCandidates(){
         let candidates = await this.votationService.getCandidates();
         this.setState({
@@ -142,6 +151,7 @@ export class App extends Component {
     async load(){
         this.getBalance();
         this.getCandidates();
+        this.hasVoted();
     }
 
     async castVotes(){
@@ -166,6 +176,7 @@ export class App extends Component {
                     <Panel title = "Your Account">
                         <p><strong> {this.state.account} </strong></p>
                         <span><strong> Balance : </strong>{this.state.balance} ETH</span>
+                        <span><strong>Status : </strong> {this.state.hasVoted} </span>
                     </Panel>
 
                 </div>

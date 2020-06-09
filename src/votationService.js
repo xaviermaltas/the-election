@@ -46,4 +46,22 @@ export class VotationService {
         console.log(from + "is trying to vote to the candidate " + candidateId );
         return this.contract.voteForCandidate(candidateId, {from, value} );
     }
+
+    async hasVoted(account){
+        return (await this.contract.voterStatus(account));
+    }
+
+    async getVoterStatus(account){
+        let hasVoted = hasVoted(account);
+        let voterStatus;
+
+        if (hasVoted == false) {
+            voterStatus = 'not voted yet';
+        }
+        else {
+            voterStatus = await this.contract.votesRecived(account);
+        }
+
+        return voterStatus;
+    }
 }
