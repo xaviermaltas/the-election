@@ -51,6 +51,19 @@ export class VotationService {
         return (await this.contract.voterStatus(account));
     }
 
+    async getVoterElection(account){
+        let hasVoted = hasVoted(account);
+        let candidates = [];
+        
+        let selectedCandidate = await this.contract.votesRecived(account);
+        candidates.push(selectedCandidate);
+
+        if(hasVoted){
+            return this.mapCandidates(candidates);
+        }
+    }
+
+    /*
     async getVoterStatus(account){
         let hasVoted = hasVoted(account);
         let voterStatus;
@@ -63,5 +76,5 @@ export class VotationService {
         }
 
         return voterStatus;
-    }
+    }*/
 }

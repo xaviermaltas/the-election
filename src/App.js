@@ -107,9 +107,7 @@ export class App extends Component {
                 );
             }else{
                 console.log("No account found");
-            }
-
-        
+            }       
 
     }
 
@@ -125,6 +123,7 @@ export class App extends Component {
         this.setState({
             hasVoted : voterHasVoted
         });
+        console.log('Has voted : ' + voterHasVoted);
     }
 
     async getCandidates(){
