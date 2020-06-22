@@ -22,6 +22,7 @@ export class VotationService {
         }));
     }
 
+
     //Return a list of objects (candidates) which have 3 properties (id,name,voteCounter)
     async getCandidates(){
         let totalOfCandidates  = await this.getTotalOfCandidates(); 
@@ -52,14 +53,11 @@ export class VotationService {
     }
 
     async getVoterElection(account){
-        let hasVoted = hasVoted(account);
-        let candidates = [];
-        
+        let hasVoted = await hasVoted(account);       
         let selectedCandidate = await this.contract.votesRecived(account);
-        candidates.push(selectedCandidate);
 
         if(hasVoted){
-            return this.mapCandidates(candidates);
+            return selectedCandidate;
         }
     }
 

@@ -21,8 +21,8 @@ export class App extends Component {
             balance : 0,
             account : undefined,
             candidates : [],
-            hasVoted : undefined,
-            voterStatus : undefined,
+            hasVoted : false,
+            voterStatus : '',
         }
     }
 
@@ -118,12 +118,32 @@ export class App extends Component {
         });
     }
 
-    async hasVoted(){
-        let voterHasVoted = await this.votationService.hasVoted(this.state.account);
+    hasVoted(){
+        let voterHasVoted = this.votationService.hasVoted(this.state.account);
         this.setState({
             hasVoted : voterHasVoted
         });
         console.log('Has voted : ' + voterHasVoted);
+    }
+
+    getVoterStatus(){
+        let hasVoted = this.state.hasVoted;
+        if(hasVoted){
+            console.log("Has voted");
+            let selectedCandidateId = this.votationService.getVoterElection(this.state.account);
+            let selectedCandidateName = this.state.candidates[selectedCandidateId].name;
+
+            this.setState({
+                voterStatus : 'You have voted for : ' + selectedCandidateName
+            });
+        }
+        else{
+            console.log("has not voted yet ");
+            this.setState({
+                voterStatus : 'Has not voted yet'
+            });
+        }
+
     }
 
     async getCandidates(){
@@ -145,16 +165,20 @@ export class App extends Component {
         alert("Your vote is for : " + (candidateName) + " with index " + (candidateId));
 
         await this.votationService.voteForACandidate( (candidateId), this.state.account );
+
+        let selectedCandidateName = await this.state.candidates[(candidateId-1)].name;
+        this.setState({
+            voterStatus : 'You have voted for : ' + selectedCandidateName
+        });
     }
 
     async load(){
         this.getBalance();
         this.getCandidates();
-        this.hasVoted();
+        this.getVoterStatus();
     }
 
     async castVotes(){
-
         var x = document.getElementById("candidatesSelect").selectedIndex;
         var y = document.getElementById("candidatesSelect").options;
         alert("Index: " + y[x].index + " is " + y[x].text);
@@ -175,7 +199,7 @@ export class App extends Component {
                     <Panel title = "Your Account">
                         <p><strong> {this.state.account} </strong></p>
                         <span><strong> Balance : </strong>{this.state.balance} ETH</span>
-                        <span><strong>Status : </strong> {this.state.hasVoted} </span>
+                        <span><strong> Status : </strong> {this.state.voterStatus} </span>
                     </Panel>
 
                 </div>
