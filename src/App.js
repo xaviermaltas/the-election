@@ -35,8 +35,7 @@ export class App extends Component {
             console.log('Your web3 provider version is: ' + this.web3.version);
 
         //console.log("Current Provider");
-        console.log(this.web3.currentProvider);
-
+            console.log(this.web3.currentProvider);
 
         //Metamask Account
             //If u get an error at the Browser console that your account is not found
@@ -57,11 +56,10 @@ export class App extends Component {
             web3.version.getNetwork((err, netId) => {
                 console.log('Network ID : ' + netId);
             })
-
-
+       
         //Subscripcio a un event de votacio
             let voteEmited = this.electionInstance.VoteEmited();
-            console.log(voteEmited);
+            // console.log(voteEmited);
             voteEmited.watch( function(error, result) {
 
                 if(!error){
@@ -81,8 +79,7 @@ export class App extends Component {
 
             }.bind(this));
 
-
-
+ 
         //Subscripcio al event del canvi de compte
         //Actualització de valors, tornant a executar this.load()
             if(account){
@@ -107,7 +104,8 @@ export class App extends Component {
                 );
             }else{
                 console.log("No account found");
-            }       
+            }     
+            
 
     }
 
@@ -118,39 +116,42 @@ export class App extends Component {
         });
     }
 
-    hasVoted(){
-        let voterHasVoted = this.votationService.hasVoted(this.state.account);
-        this.setState({
-            hasVoted : voterHasVoted
-        });
-        console.log('Has voted : ' + voterHasVoted);
-    }
-
-    getVoterStatus(){
-        let hasVoted = this.state.hasVoted;
-        if(hasVoted){
-            console.log("Has voted");
-            let selectedCandidateId = this.votationService.getVoterElection(this.state.account);
-            let selectedCandidateName = this.state.candidates[selectedCandidateId].name;
-
-            this.setState({
-                voterStatus : 'You have voted for : ' + selectedCandidateName
-            });
-        }
-        else{
-            console.log("has not voted yet ");
-            this.setState({
-                voterStatus : 'Has not voted yet'
-            });
-        }
-
-    }
-
     async getCandidates(){
         let candidates = await this.votationService.getCandidates();
         this.setState({
             candidates
         });
+    }
+
+    async getVoterStatus(){
+        //Getting information if the user has or not voted
+        
+        let hasVoted = await this.votationService.hasVoted(this.state.account);
+        console.log(hasVoted);
+        this.setState({
+            hasVoted : hasVoted
+        });
+
+        if(this.state.hasVoted){
+            console.log("Has voted");
+            let selectedCandidateId = await (this.votationService.getVoterElection(this.state.account));
+            console.log('Selected Candidate ID: '+ selectedCandidateId);
+
+            let candidateArray = this.state.candidates;
+
+            let selectedCandidateName = await candidateArray[selectedCandidateId-1].name;
+            console.log(selectedCandidateName);
+
+            this.setState({
+                voterStatus : 'You have voted for ' + selectedCandidateName + ' with ID : ' + (selectedCandidateId)
+            });
+        }
+        else{
+            console.log("has not voted yet");
+            this.setState({
+                voterStatus : 'Has not voted yet'
+            });
+        }
     }
 
     async voteForACandidate(){
@@ -197,9 +198,9 @@ export class App extends Component {
                 <div className = "col-sm">
 
                     <Panel title = "Your Account">
-                        <p><strong> {this.state.account} </strong></p>
-                        <span><strong> Balance : </strong>{this.state.balance} ETH</span>
-                        <span><strong> Status : </strong> {this.state.voterStatus} </span>
+                        <p><strong> Address : </strong>{this.state.account} </p>
+                        <p><strong> Balance : </strong>{this.state.balance} ETH</p>
+                        <p><strong> Status :  </strong> {this.state.voterStatus} </p>
                     </Panel>
 
                 </div>

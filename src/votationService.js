@@ -49,16 +49,13 @@ export class VotationService {
     }
 
     async hasVoted(account){
+        // console.log('votationSevice, hasVoter Method');
         return (await this.contract.voterStatus(account));
     }
 
     async getVoterElection(account){
-        let hasVoted = await hasVoted(account);       
-        let selectedCandidate = await this.contract.votesRecived(account);
-
-        if(hasVoted){
-            return selectedCandidate;
-        }
+        let selectedCandidateId = await this.contract.votesRecived(account);
+        return (selectedCandidateId.toNumber());
     }
 
     /*
