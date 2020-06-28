@@ -22,6 +22,7 @@ export class VotationService {
         }));
     }
 
+
     //Return a list of objects (candidates) which have 3 properties (id,name,voteCounter)
     async getCandidates(){
         let totalOfCandidates  = await this.getTotalOfCandidates(); 
@@ -46,4 +47,29 @@ export class VotationService {
         console.log(from + "is trying to vote to the candidate " + candidateId );
         return this.contract.voteForCandidate(candidateId, {from, value} );
     }
+
+    async hasVoted(account){
+        // console.log('votationSevice, hasVoter Method');
+        return (await this.contract.voterStatus(account));
+    }
+
+    async getVoterElection(account){
+        let selectedCandidateId = await this.contract.votesRecived(account);
+        return (selectedCandidateId.toNumber());
+    }
+
+    /*
+    async getVoterStatus(account){
+        let hasVoted = hasVoted(account);
+        let voterStatus;
+
+        if (hasVoted == false) {
+            voterStatus = 'not voted yet';
+        }
+        else {
+            voterStatus = await this.contract.votesRecived(account);
+        }
+
+        return voterStatus;
+    }*/
 }

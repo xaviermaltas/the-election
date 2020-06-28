@@ -21,6 +21,8 @@ export class App extends Component {
             balance : 0,
             account : undefined,
             candidates : [],
+            hasVoted : false,
+            voterStatus : '',
         }
     }
 
@@ -33,8 +35,7 @@ export class App extends Component {
             console.log('Your web3 provider version is: ' + this.web3.version);
 
         //console.log("Current Provider");
-        console.log(this.web3.currentProvider);
-
+            console.log(this.web3.currentProvider);
 
         //Metamask Account
             //If u get an error at the Browser console that your account is not found
@@ -55,11 +56,10 @@ export class App extends Component {
             web3.version.getNetwork((err, netId) => {
                 console.log('Network ID : ' + netId);
             })
-
-
+       
         //Subscripcio a un event de votacio
             let voteEmited = this.electionInstance.VoteEmited();
-            console.log(voteEmited);
+            // console.log(voteEmited);
             voteEmited.watch( function(error, result) {
 
                 if(!error){
@@ -79,8 +79,7 @@ export class App extends Component {
 
             }.bind(this));
 
-
-
+ 
         //Subscripcio al event del canvi de compte
         //Actualització de valors, tornant a executar this.load()
             if(account){
@@ -88,8 +87,8 @@ export class App extends Component {
                 this.web3.currentProvider.publicConfigStore.on('update', async function(event){
                     this.setState({
                         account : event.selectedAddress.toLowerCase()
-                    }, () => {
-                        this.load();
+                    }, async () => {
+                        await this.load();
                     });
                 }.bind(this));
 
@@ -98,16 +97,15 @@ export class App extends Component {
                         account : account.toLowerCase()
                     },
                         //Callback. Load the app while the account is setted
-                        ()=>{
+                        async ()=>{
                             //Method for initializing our app
-                            this.load();
+                            await this.load();
                         }
                 );
             }else{
                 console.log("No account found");
-            }
-
-        
+            }     
+            
 
     }
 
@@ -125,6 +123,37 @@ export class App extends Component {
         });
     }
 
+    async getVoterStatus(){
+        //Getting information if the user has or not voted
+        
+        let hasVoted = await this.votationService.hasVoted(this.state.account);
+        console.log(hasVoted);
+        this.setState({
+            hasVoted : hasVoted
+        });
+
+        if(this.state.hasVoted){
+            console.log("Has voted");
+            let selectedCandidateId = await (this.votationService.getVoterElection(this.state.account));
+            console.log('Selected Candidate ID: '+ selectedCandidateId);
+
+            let candidateArray = this.state.candidates;
+
+            let selectedCandidateName = await candidateArray[selectedCandidateId-1].name;
+            console.log(selectedCandidateName);
+
+            this.setState({
+                voterStatus : 'You have voted for ' + selectedCandidateName + ' with ID : ' + (selectedCandidateId)
+            });
+        }
+        else{
+            console.log("has not voted yet");
+            this.setState({
+                voterStatus : 'Has not voted yet'
+            });
+        }
+    }
+
     async voteForACandidate(){
 
         var x = document.getElementById("candidatesSelect").selectedIndex;
@@ -137,15 +166,20 @@ export class App extends Component {
         alert("Your vote is for : " + (candidateName) + " with index " + (candidateId));
 
         await this.votationService.voteForACandidate( (candidateId), this.state.account );
+
+        let selectedCandidateName = await this.state.candidates[(candidateId-1)].name;
+        this.setState({
+            voterStatus : 'You have voted for : ' + selectedCandidateName
+        });
     }
 
     async load(){
-        this.getBalance();
-        this.getCandidates();
+        await this.getBalance();
+        await this.getCandidates();
+        await this.getVoterStatus();
     }
 
     async castVotes(){
-
         var x = document.getElementById("candidatesSelect").selectedIndex;
         var y = document.getElementById("candidatesSelect").options;
         alert("Index: " + y[x].index + " is " + y[x].text);
@@ -164,8 +198,9 @@ export class App extends Component {
                 <div className = "col-sm">
 
                     <Panel title = "Your Account">
-                        <p><strong> {this.state.account} </strong></p>
-                        <span><strong> Balance : </strong>{this.state.balance} ETH</span>
+                        <p><strong> Address : </strong>{this.state.account} </p>
+                        <p><strong> Balance : </strong>{this.state.balance} ETH</p>
+                        <p><strong> Status :  </strong> {this.state.voterStatus} </p>
                     </Panel>
 
                 </div>
