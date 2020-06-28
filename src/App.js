@@ -87,8 +87,8 @@ export class App extends Component {
                 this.web3.currentProvider.publicConfigStore.on('update', async function(event){
                     this.setState({
                         account : event.selectedAddress.toLowerCase()
-                    }, () => {
-                        this.load();
+                    }, async () => {
+                        await this.load();
                     });
                 }.bind(this));
 
@@ -97,9 +97,9 @@ export class App extends Component {
                         account : account.toLowerCase()
                     },
                         //Callback. Load the app while the account is setted
-                        ()=>{
+                        async ()=>{
                             //Method for initializing our app
-                            this.load();
+                            await this.load();
                         }
                 );
             }else{
@@ -174,9 +174,9 @@ export class App extends Component {
     }
 
     async load(){
-        this.getBalance();
-        this.getCandidates();
-        this.getVoterStatus();
+        await this.getBalance();
+        await this.getCandidates();
+        await this.getVoterStatus();
     }
 
     async castVotes(){
