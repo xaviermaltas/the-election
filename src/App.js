@@ -186,6 +186,7 @@ export class App extends Component {
         // var candidateId = $('#candidatesSelect').val();
         console.log("Index selected " + y[x].index);
     }
+    
 
     render() {
         // debugger;
@@ -194,7 +195,7 @@ export class App extends Component {
                 <h4 className="display-4">Voting Application</h4>
             </div>
 
-            <div className = "row">
+            <div id = "yourAccount" className = "row">
                 <div className = "col-sm">
 
                     <Panel title = "Your Account">
