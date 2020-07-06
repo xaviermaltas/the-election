@@ -12,6 +12,96 @@ const converter = (web3) =>{
     }
 }
 
+function JumbotronUI(){
+    return(
+        <div className="jumbotron">
+        <h4 className="display-4">Voting Application</h4>
+        </div>
+    );
+}
+  
+function UserInformationUI({account, balance, voterStatus}) {
+    return (
+        <div id = "yourAccount" className = "row">
+            <div className = "col-sm">
+                <Panel title={"Your Account"}>
+                
+                <div className="userInformation row">
+                    <div className="col-sm">
+                    <p><strong> Address : </strong>{account} </p>
+                    <p><strong> Balance : </strong> {balance} ETH</p>
+                    <p><strong> Status :  </strong> {voterStatus} </p>
+                    </div>
+                </div>
+
+                </Panel>
+            </div>
+        </div>
+    );
+}
+
+function CandidatesTable({candidates}){
+    return (
+        
+        candidates.map( (candidate,i) => {
+            return <tr key = {i}>
+                <td>{candidate.id}</td>
+                <td>{candidate.name}</td>
+                <td>{candidate.voteCounter}</td>
+            </tr>
+        })
+
+    );
+}
+  
+function VotationResultsUI({candidates}){
+    return(
+
+        <div id = "votationResults" className = "row">
+            <div className = "col-sm">
+                <Panel title = {"Votation Results"} >
+                
+                <table className="table">
+                    <thead>
+                        <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Votes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidatesResults">
+                        <CandidatesTable candidates={candidates}/>
+                    </tbody>
+                </table>
+
+
+                </Panel>
+            </div>
+        </div>
+
+    );
+
+
+}
+
+function NetworkAreaUI({network}){
+    return (
+      <div id = "network" className = "row">
+        <div className = "col-sm">
+          <Panel title={"Network"}>
+            
+            <div className="netInformation row">
+              <div className="col-sm">
+                <p><strong> Network : </strong> {network} </p>
+              </div>
+            </div>
+  
+          </Panel>
+        </div>
+      </div>    
+    );
+  }
+
 export class App extends Component {
 
     constructor(props) {
@@ -23,6 +113,7 @@ export class App extends Component {
             candidates : [],
             hasVoted : false,
             voterStatus : '',
+            network : undefined
         }
     }
 
@@ -53,9 +144,9 @@ export class App extends Component {
             this.votationService = new VotationService(this.electionInstance);
 
         //Get and print the network Id
-            web3.version.getNetwork((err, netId) => {
-                console.log('Network ID : ' + netId);
-            })
+            // web3.version.getNetwork((err, netId) => {
+                // console.log('Network ID : ' + netId);
+            // });
        
         //Subscripcio a un event de votacio
             let voteEmited = this.electionInstance.VoteEmited();
@@ -106,6 +197,16 @@ export class App extends Component {
                 console.log("No account found");
             }     
             
+
+    }
+
+    async getNetwork(){
+        let net = await web3.version.getNetwork((err, netId) => {
+            this.setState({
+                network : netId
+            });
+            console.log('Network ID : ' + netId);
+        });
 
     }
 
@@ -174,6 +275,7 @@ export class App extends Component {
     }
 
     async load(){
+        await this.getNetwork();
         await this.getBalance();
         await this.getCandidates();
         await this.getVoterStatus();
@@ -191,53 +293,21 @@ export class App extends Component {
     render() {
         // debugger;
         return <React.Fragment>
-            <div className="jumbotron">
-                <h4 className="display-4">Voting Application</h4>
-            </div>
+           <JumbotronUI />
 
-            <div id = "yourAccount" className = "row">
-                <div className = "col-sm">
+            <NetworkAreaUI 
+                network={this.state.network}
+            />
 
-                    <Panel title = "Your Account">
-                        <p><strong> Address : </strong>{this.state.account} </p>
-                        <p><strong> Balance : </strong>{this.state.balance} ETH</p>
-                        <p><strong> Status :  </strong> {this.state.voterStatus} </p>
-                    </Panel>
+            <UserInformationUI 
+                account={this.state.account} 
+                balance={this.state.balance} 
+                voterStatus={this.state.voterStatus} 
+            />
 
-                </div>
-            </div>
-
-            <div id = "votationResults" className = "row">
-                <div className = "col-sm">
-
-                    <Panel title = "Votation Results">
-
-                        <table className="table">
-                            <thead>
-                                <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Votes</th>
-                                </tr>
-                            </thead>
-                            <tbody id="candidatesResults">
-                                {
-                                    this.state.candidates.map( (candidate, i) => {
-                                        // debugger;
-                                        return <tr key = {i}>
-                                            <td>{candidate.id}</td>
-                                            <td>{candidate.name}</td>
-                                            <td>{candidate.voteCounter}</td>
-                                        </tr>
-                                    })
-                                }
-                            </tbody>
-                        </table>
-
-                    </Panel>
-
-                </div>
-            </div>
+            <VotationResultsUI 
+                candidates={this.state.candidates} 
+            />
 
             <div id = "votationArea" className = "row">
 
@@ -260,7 +330,6 @@ export class App extends Component {
 
                             <button type = "button" className="btn btn-primary" onClick={() => this.voteForACandidate()}>Vote</button>
 
-                            {/* <button className = "btn btn-sm btn-success text-white" type = "submit" onClick={() => this.voteForACandidate(1) }> Vooote</button> */}
                         </form>
 
                     </Panel>
