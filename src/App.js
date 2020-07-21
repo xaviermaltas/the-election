@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import Panel from "./Panel";
-import getWeb3 from "./getWeb3";
 import ElectionContract from "./election";
 import { VotationService } from "./votationService";
 import { ToastContainer } from "react-toastr";
+import detectEthereumProvider from '@metamask/detect-provider';
 
 
 const converter = (web3) =>{
@@ -100,7 +100,8 @@ function NetworkAreaUI({network}){
         </div>
       </div>    
     );
-  }
+}
+
 
 export class App extends Component {
 
@@ -116,39 +117,94 @@ export class App extends Component {
             network : undefined
         }
     }
-
-    //Component que es carrega una única vegada despres d'inicialitzar la pàgina
+    
     async componentDidMount(){
-        // Web3 Provider
-            this.web3 = await getWeb3();
+    /**
+     * Aquest component només es carrega un única vegada just despres d'inicialitzar la pàgina
+    */
 
-        //Web3 Provider Version
-            console.log('Your web3 provider version is: ' + this.web3.version);
+        /**
+         * Provider
+        */
+            const provider = await detectEthereumProvider();
+            // if (typeof window.ethereum !== 'undefined') {
+            if (provider) {
+                // From now on, this should always be true:
+                // provider === window.ethereum
+                // startApp(provider); // initialize your app
+                if(ethereum.isMetaMask){
+                    console.log('Metamaks installed!');
+                }
+            } else {
+                console.log('Please install MetaMask!');
+            }
+        
+        /**
+         * Contract Instance
+        */
+            //Here we define an Instance of our Election Smart Contract
+                this.electionInstance = await ElectionContract(window.ethereum);
 
-        //console.log("Current Provider");
-            console.log(this.web3.currentProvider);
+            //Conversion from wey to Eth
+                this.toEther = converter(this.web3);
 
-        //Metamask Account
-            //If u get an error at the Browser console that your account is not found
-            //Write : ethereum.enable()
-            var account = ( await this.web3.eth.getAccounts() )[0];
-            console.log('Your account is: ' + account);
-
-        //Here we define an Instance of our Election Smart Contract
-            this.electionInstance = await ElectionContract(this.web3.currentProvider);
-
-        //Conversion from wey to Eth
-            this.toEther = converter(this.web3);
-
-        //Creation of an instance of VotationService class
+            //Creation of an instance of VotationService class
             this.votationService = new VotationService(this.electionInstance);
 
-        //Get and print the network Id
-            // web3.version.getNetwork((err, netId) => {
-                // console.log('Network ID : ' + netId);
-            // });
-       
-        //Subscripcio a un event de votacio
+
+        /**
+         * Accounts
+        */
+            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+            const account = accounts[0];
+
+            ethereum.on('accountsChanged', 
+                async function (accounts) {
+                    this.setState({
+                        account : accounts[0]
+                    }, async () => {
+                        await this.load();
+                    });
+
+                    window.location.reload();
+                }.bind(this)
+            );
+
+            this.setState({
+                account : account.toLowerCase()
+            },
+                //Callback. Load the app while the account is setted
+                async ()=>{
+                    //Method for initializing our app
+                    await this.load();
+                }
+            );
+        
+        /**
+         * Network and Chain
+        */
+            const networkVersion = ethereum.networkVersion;
+            const chainId = ethereum.chainId;
+
+            console.log('Network version : ' + networkVersion);
+            console.log('ChainID : ' + chainId);
+
+            ethereum.on('networkChanged', 
+                async function (networkVersion) {
+                    this.setState({
+                        network : networkVersion[0]
+                    }, async () => {
+                        await this.load();
+                    });
+
+                    window.location.reload();
+                }.bind(this)
+            );
+
+
+        /**
+         * Subscripcio a un event de votacio
+        */
             let voteEmited = this.electionInstance.VoteEmited();
             // console.log(voteEmited);
             voteEmited.watch( function(error, result) {
@@ -170,44 +226,30 @@ export class App extends Component {
 
             }.bind(this));
 
- 
-        //Subscripcio al event del canvi de compte
-        //Actualització de valors, tornant a executar this.load()
-            if(account){
-
-                this.web3.currentProvider.publicConfigStore.on('update', async function(event){
-                    this.setState({
-                        account : event.selectedAddress.toLowerCase()
-                    }, async () => {
-                        await this.load();
-                    });
-                }.bind(this));
+    }
 
 
-                this.setState({
-                        account : account.toLowerCase()
-                    },
-                        //Callback. Load the app while the account is setted
-                        async ()=>{
-                            //Method for initializing our app
-                            await this.load();
-                        }
-                );
-            }else{
-                console.log("No account found");
-            }     
-            
+    async getAccount(){
+        var account = ethereum.selectedAddress;
+        if(account){
+            this.setState({
+                account : account.toLowerCase()
+            });
+            console.log('Account : ' + account);
+        }
+        else{
+            console.log("No account found");
+        }
 
     }
 
     async getNetwork(){
-        let net = await web3.version.getNetwork((err, netId) => {
-            this.setState({
-                network : netId
-            });
-            console.log('Network ID : ' + netId);
-        });
+        const networkVersion = ethereum.networkVersion;
 
+        this.setState({
+            network : networkVersion
+        });
+        console.log('Network version ' + ethereum.networkVersion);
     }
 
     async getBalance(){
@@ -220,7 +262,7 @@ export class App extends Component {
     async getCandidates(){
         let candidates = await this.votationService.getCandidates();
         this.setState({
-            candidates
+            candidates : candidates
         });
     }
 
@@ -272,11 +314,14 @@ export class App extends Component {
         this.setState({
             voterStatus : 'You have voted for : ' + selectedCandidateName
         });
+        
+        await this.getCandidates();
     }
 
     async load(){
+        await this.getAccount();
         await this.getNetwork();
-        await this.getBalance();
+        // await this.getBalance();
         await this.getCandidates();
         await this.getVoterStatus();
     }

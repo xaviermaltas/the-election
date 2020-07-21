@@ -7,23 +7,35 @@
 
 
 import Web3 from 'web3';
+// import detectEthereumProvider from '@metamask/detect-provider';
 
 const getWeb3 = () => {
 
     return new Promise ( (resolve, reject) => {
         window.addEventListener('load', function() {
-            let web3 = window.web3;
+            // let web3 = window.web3;
 
-            if(typeof web3 !== undefined){
-                web3 = new Web3(web3.currentProvider);
-                console.log("Web 3 Provider Info Below");
-                console.log(web3);
-                resolve(web3);
+            // if(typeof web3 !== undefined){
+            //     web3 = new Web3(web3.currentProvider);
+            //     console.log("Web 3 Provider Info Below");
+            //     console.log(web3);
+            //     resolve(web3);
+            // }
+            // else{
+                // console.log("No provider found, please install Metamask");
+                // reject();
+            // }
+            
+            if (typeof window.ethereum !== 'undefined') {
+                console.log('MetaMask is installed!');
+                resolve(window.ethereum)
             }
             else{
                 console.log("No provider found, please install Metamask");
                 reject();
             }
+
+
         });
     });
 };

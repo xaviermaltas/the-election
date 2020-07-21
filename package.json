@@ -27,5 +27,8 @@
     "webpack-dev-server": "^3.8.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@metamask/detect-provider": "^1.1.0"
+  }
 }
