@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Panel from "./Panel";
+import Jumbotron from "./Jumbotron";
 import ElectionContract from "./election";
 import { VotationService } from "./votationService";
 import { ToastContainer } from "react-toastr";
@@ -12,14 +13,34 @@ const converter = (web3) =>{
     }
 }
 
-function JumbotronUI(){
-    return(
-        <div className="jumbotron">
-        <h4 className="display-4">Voting Application</h4>
+/*
+    function JumbotronUI(){
+        return(
+            <div className="jumbotron">
+            <h4 className="display-4">Voting Application</h4>
+            </div>
+        );
+    }
+*/
+  
+function NetworkAreaUI({network}){
+    return (
+      <div id = "network" className = "row">
+        <div className = "col-sm">
+          <Panel title={"Network"}>
+            
+            <div className="netInformation row">
+              <div className="col-sm">
+                <p><strong> Network : </strong> {network} </p>
+              </div>
+            </div>
+  
+          </Panel>
         </div>
+      </div>    
     );
 }
-  
+
 function UserInformationUI({account, balance, voterStatus}) {
     return (
         <div id = "yourAccount" className = "row">
@@ -29,7 +50,7 @@ function UserInformationUI({account, balance, voterStatus}) {
                 <div className="userInformation row">
                     <div className="col-sm">
                     <p><strong> Address : </strong>{account} </p>
-                    <p><strong> Balance : </strong> {balance} ETH</p>
+                    {/* <p><strong> Balance : </strong> {balance} ETH</p> */}
                     <p><strong> Status :  </strong> {voterStatus} </p>
                     </div>
                 </div>
@@ -84,23 +105,7 @@ function VotationResultsUI({candidates}){
 
 }
 
-function NetworkAreaUI({network}){
-    return (
-      <div id = "network" className = "row">
-        <div className = "col-sm">
-          <Panel title={"Network"}>
-            
-            <div className="netInformation row">
-              <div className="col-sm">
-                <p><strong> Network : </strong> {network} </p>
-              </div>
-            </div>
-  
-          </Panel>
-        </div>
-      </div>    
-    );
-}
+
 
 
 export class App extends Component {
@@ -338,7 +343,8 @@ export class App extends Component {
     render() {
         // debugger;
         return <React.Fragment>
-           <JumbotronUI />
+           {/* <JumbotronUI /> */}
+           <Jumbotron title={"Voting Application"}></Jumbotron>
 
             <NetworkAreaUI 
                 network={this.state.network}
