@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Panel from "./components/Panel";
-import Jumbotron from "./Jumbotron";
+import Jumbotron from "./components/Jumbotron";
 import ElectionContract from "./election";
 import { VotationService } from "./votationService";
 import { ToastContainer } from "react-toastr";
