@@ -6,6 +6,8 @@ import { VotationService } from "./votationService";
 import { ToastContainer } from "react-toastr";
 import detectEthereumProvider from '@metamask/detect-provider';
 
+import PageLoader from "./components/PageLoader";
+
 
 const converter = (web3) =>{
     return(value) => {
@@ -342,57 +344,65 @@ export class App extends Component {
 
     render() {
         // debugger;
-        return <React.Fragment>
-           {/* <JumbotronUI /> */}
-           <Jumbotron title={"Voting Application"}></Jumbotron>
 
-            <NetworkAreaUI 
-                network={this.state.network}
-            />
+        // if(!(this.state.isMetamask && this.state.isConnected)) {
+        //     return <PageLoader isMetaMask={this.state.isMetamask} isConnected={this.state.isConnected}></PageLoader>
+        // }
 
-            <UserInformationUI 
-                account={this.state.account} 
-                balance={this.state.balance} 
-                voterStatus={this.state.voterStatus} 
-            />
+        return (
+                    
+            <React.Fragment>
+            {/* <JumbotronUI /> */}
+            <Jumbotron title={"Voting Application"}></Jumbotron>
 
-            <VotationResultsUI 
-                candidates={this.state.candidates} 
-            />
+                <NetworkAreaUI 
+                    network={this.state.network}
+                />
 
-            <div id = "votationArea" className = "row">
+                <UserInformationUI 
+                    account={this.state.account} 
+                    balance={this.state.balance} 
+                    voterStatus={this.state.voterStatus} 
+                />
 
-                <div className = "col-sm">
+                <VotationResultsUI 
+                    candidates={this.state.candidates} 
+                />
 
-                    <Panel title ="Votation Area">
+                <div id = "votationArea" className = "row">
 
-                        <form>
-                            <div className="form-group">
-                                <label>Select Candidate</label>
-                                <select className="form-control" id="candidatesSelect">
-                                    {
-                                        this.state.candidates.map( (candidate, i) => {
-                                            return <option value = {i} key = {i}>{candidate.name}</option>
-                                        })
+                    <div className = "col-sm">
 
-                                    }
-                                </select>
-                            </div>
+                        <Panel title ="Votation Area">
 
-                            <button type = "button" className="btn btn-primary" onClick={() => this.voteForACandidate()}>Vote</button>
+                            <form>
+                                <div className="form-group">
+                                    <label>Select Candidate</label>
+                                    <select className="form-control" id="candidatesSelect">
+                                        {
+                                            this.state.candidates.map( (candidate, i) => {
+                                                return <option value = {i} key = {i}>{candidate.name}</option>
+                                            })
 
-                        </form>
+                                        }
+                                    </select>
+                                </div>
 
-                    </Panel>
+                                <button type = "button" className="btn btn-primary" onClick={() => this.voteForACandidate()}>Vote</button>
+
+                            </form>
+
+                        </Panel>
+
+                    </div>
 
                 </div>
 
-            </div>
+                <ToastContainer ref= { (input) => this.container = input }
+                    className = "toast-top-right"
+                />
 
-            <ToastContainer ref= { (input) => this.container = input }
-                className = "toast-top-right"
-            />
-
-        </React.Fragment>
+            </React.Fragment>
+        );
     }
 }
