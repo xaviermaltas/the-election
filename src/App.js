@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Panel from "./Panel";
+import Panel from "./components/Panel";
 import Jumbotron from "./Jumbotron";
 import ElectionContract from "./election";
 import { VotationService } from "./votationService";
@@ -13,16 +13,6 @@ const converter = (web3) =>{
     }
 }
 
-/*
-    function JumbotronUI(){
-        return(
-            <div className="jumbotron">
-            <h4 className="display-4">Voting Application</h4>
-            </div>
-        );
-    }
-*/
-  
 function NetworkAreaUI({network}){
     return (
       <div id = "network" className = "row">
@@ -138,7 +128,17 @@ export class App extends Component {
                 // provider === window.ethereum
                 // startApp(provider); // initialize your app
                 if(ethereum.isMetaMask){
-                    console.log('Metamaks installed!');
+                    // console.log('Metamaks installed!');
+
+                    this.setState({
+                        isMetamask : true
+                    });
+
+                    if( ethereum.isConnected() ){
+                        this.setState({
+                            isConnected : true
+                        })
+                    }
                 }
             } else {
                 console.log('Please install MetaMask!');
@@ -191,8 +191,8 @@ export class App extends Component {
             const networkVersion = ethereum.networkVersion;
             const chainId = ethereum.chainId;
 
-            console.log('Network version : ' + networkVersion);
-            console.log('ChainID : ' + chainId);
+            // console.log('Network version : ' + networkVersion);
+            // console.log('ChainID : ' + chainId);
 
             ethereum.on('networkChanged', 
                 async function (networkVersion) {
@@ -240,7 +240,7 @@ export class App extends Component {
             this.setState({
                 account : account.toLowerCase()
             });
-            console.log('Account : ' + account);
+            // console.log('Account : ' + account);
         }
         else{
             console.log("No account found");
@@ -254,7 +254,7 @@ export class App extends Component {
         this.setState({
             network : networkVersion
         });
-        console.log('Network version ' + ethereum.networkVersion);
+        // console.log('Network version ' + ethereum.networkVersion);
     }
 
     async getBalance(){
@@ -275,7 +275,7 @@ export class App extends Component {
         //Getting information if the user has or not voted
         
         let hasVoted = await this.votationService.hasVoted(this.state.account);
-        console.log(hasVoted);
+        // console.log(hasVoted);
         this.setState({
             hasVoted : hasVoted
         });
@@ -295,7 +295,7 @@ export class App extends Component {
             });
         }
         else{
-            console.log("has not voted yet");
+            // console.log("has not voted yet");
             this.setState({
                 voterStatus : 'Has not voted yet'
             });
