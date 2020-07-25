@@ -15,6 +15,26 @@ const converter = (web3) =>{
     }
 }
 
+const isMetaMaskInstalled = () => {
+    const { ethereum } = window
+    return Boolean(ethereum && ethereum.isMetaMask)
+}
+
+const isMetaMaskConnected = () => {
+    const {ethereum} = window
+    return Boolean(ethereum && ethereum.isConnected())
+}
+
+const Button = ({ onClick }) => (
+    <button onClick={onClick} type="button">
+    Toggle Show
+    </button>
+);
+
+const toggleShow = () => {
+    alert('hey');
+};
+
 function NetworkAreaUI({network}){
     return (
       <div id = "network" className = "row">
@@ -125,6 +145,7 @@ export class App extends Component {
         */
             const provider = await detectEthereumProvider();
             // if (typeof window.ethereum !== 'undefined') {
+
             if (provider) {
                 // From now on, this should always be true:
                 // provider === window.ethereum
@@ -140,7 +161,13 @@ export class App extends Component {
                         this.setState({
                             isConnected : true
                         })
+
                     }
+                    // else {
+                    //     this.setState({
+                    //         isConnected : false
+                    //     })
+                    // }
                 }
             } else {
                 console.log('Please install MetaMask!');
@@ -156,15 +183,15 @@ export class App extends Component {
                 this.toEther = converter(this.web3);
 
             //Creation of an instance of VotationService class
-            this.votationService = new VotationService(this.electionInstance);
+                this.votationService = new VotationService(this.electionInstance);
 
 
         /**
          * Accounts
         */
-            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            const account = accounts[0];
-
+            
+       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+       const account = accounts[0];
             ethereum.on('accountsChanged', 
                 async function (accounts) {
                     this.setState({
@@ -340,20 +367,35 @@ export class App extends Component {
         // var candidateId = $('#candidatesSelect').val();
         console.log("Index selected " + y[x].index);
     }
+
+    async ButtonFunction(){
+
+        const Button = ({ onClick }) => (
+            <button onClick={onClick} type="button">
+            Toggle Show
+            </button>
+        );
+    }      
     
 
     render() {
         // debugger;
 
-        // if(!(this.state.isMetamask && this.state.isConnected)) {
-        //     return <PageLoader isMetaMask={this.state.isMetamask} isConnected={this.state.isConnected}></PageLoader>
-        // }
+        // if(!(ethereum.isMetaMask && ethereum.isConnected())) {
+        //     return <PageLoader isMetaMask={ethereum.isMetaMask} isConnected={ethereum.isConnected()}></PageLoader>
+        // }        
+
+        if(!(this.state.isMetamask && this.state.isConnected)) {
+            return <PageLoader isMetaMask={this.state.isMetamask} isConnected={this.state.isConnected}></PageLoader>
+        }
+
 
         return (
                     
             <React.Fragment>
             {/* <JumbotronUI /> */}
-            <Jumbotron title={"Voting Application"}></Jumbotron>
+                <Button onClick={toggleShow} />
+                <Jumbotron title={"Voting Application"}></Jumbotron>
 
                 <NetworkAreaUI 
                     network={this.state.network}
