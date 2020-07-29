@@ -115,7 +115,8 @@ class PageLoader extends Component {
             console.log('permissionRequestAnswer : ' + permissionRequestAnswer);
             permissionsResult.innerHTML = permissionRequestAnswer;
 
-            window.location.reload();
+            location.reload();
+            
 
         } catch (err) {
             console.error(err)
@@ -136,8 +137,8 @@ class PageLoader extends Component {
         const { isMetaMask, isConnected } = this.props;
         // console.log('PageLoader Render : ' + isMetaMask + ' ' + isConnected);
                
-        if(!(isMetaMask && isConnected)) {
-        
+        // if(!(isMetaMask && isConnected)) {
+        if(!isMetaMask){
             return (
 
                 <div className="pageloader" id="pageloader" className="container-fluid">
