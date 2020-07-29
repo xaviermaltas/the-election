@@ -35,7 +35,8 @@ const toggleShow = () => {
     alert('hey');
 };
 
-function NetworkAreaUI({network}){
+
+function NetworkAreaUI({network, chain}){
     return (
       <div id = "network" className = "row">
         <div className = "col-sm">
@@ -44,6 +45,12 @@ function NetworkAreaUI({network}){
             <div className="netInformation row">
               <div className="col-sm">
                 <p><strong> Network : </strong> {network} </p>
+              </div>
+            </div>
+
+            <div className="chainInformation row">
+              <div className="col-sm">
+                <p><strong> Chain : </strong> {chain} </p>
               </div>
             </div>
   
@@ -119,9 +126,10 @@ function VotationResultsUI({candidates}){
 
 
 
-
 export class App extends Component {
-
+    /**
+     * Component 
+    */
     constructor(props) {
         super(props);
 
@@ -223,7 +231,17 @@ export class App extends Component {
             // console.log('Network version : ' + networkVersion);
             // console.log('ChainID : ' + chainId);
 
-            ethereum.on('networkChanged', 
+            window.ethereum.on( 'chainChanged',
+                async function (chainId) {
+                    this.setState({
+                        chain : chainId
+                    }, async () => {
+                        await this.load();
+                    });
+                }.bind(this)
+            );
+
+            window.ethereum.on( 'networkChanged', 
                 async function (networkVersion) {
                     this.setState({
                         network : networkVersion[0]
@@ -234,6 +252,7 @@ export class App extends Component {
                     window.location.reload();
                 }.bind(this)
             );
+
 
 
         /**
@@ -262,7 +281,10 @@ export class App extends Component {
 
     }
 
-
+    /**
+     * Functions
+    */
+   
     async getAccount(){
         var account = ethereum.selectedAddress;
         if(account){
@@ -284,6 +306,15 @@ export class App extends Component {
             network : networkVersion
         });
         // console.log('Network version ' + ethereum.networkVersion);
+    }
+
+    async getChain(){
+        const chainId = window.ethereum.chainId;
+
+        this.setState({
+            chain : chainId
+        });
+        // console.log('Chain ' + ethereum.networkVersion);
     }
 
     async getBalance(){
@@ -355,6 +386,7 @@ export class App extends Component {
     async load(){
         await this.getAccount();
         await this.getNetwork();
+        await this.getChain();
         // await this.getBalance();
         await this.getCandidates();
         await this.getVoterStatus();
@@ -366,16 +398,10 @@ export class App extends Component {
         alert("Index: " + y[x].index + " is " + y[x].text);
         // var candidateId = $('#candidatesSelect').val();
         console.log("Index selected " + y[x].index);
-    }
+    }   
 
-    async ButtonFunction(){
 
-        const Button = ({ onClick }) => (
-            <button onClick={onClick} type="button">
-            Toggle Show
-            </button>
-        );
-    }      
+    
     
 
     render() {
@@ -393,12 +419,12 @@ export class App extends Component {
         return (
                     
             <React.Fragment>
-            {/* <JumbotronUI /> */}
-                <Button onClick={toggleShow} />
+                
                 <Jumbotron title={"Voting Application"}></Jumbotron>
 
                 <NetworkAreaUI 
                     network={this.state.network}
+                    chain={this.state.chain}
                 />
 
                 <UserInformationUI 
@@ -429,7 +455,7 @@ export class App extends Component {
                                         }
                                     </select>
                                 </div>
-
+                                
                                 <button type = "button" className="btn btn-primary" onClick={() => this.voteForACandidate()}>Vote</button>
 
                             </form>

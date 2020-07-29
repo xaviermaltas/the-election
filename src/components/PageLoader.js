@@ -99,103 +99,42 @@ class PageLoader extends Component {
 
     }
 
-    // /**
-    //  * Init buttons
-    // */
+    /**
+     * Permissions
+    */
 
-    // async updateButtons(){
+    async requestPermissions(){
 
-    //     const onboardButton = document.getElementById('connectButton');
-    //     // if (!this.state.isMetaMask) {
-    //     if(!(ethereum.isMetaMask)){
-    //         onboardButton.innerHTML = 'Click here to install MetaMask!'
-    //         onboardButton.onclick = this.onClickInstall();
-    //         onboardButton.disabled = false
+        try {
+            const permissionsArray = await ethereum.request({
+              method: 'wallet_requestPermissions',
+              params: [{ eth_accounts: {} }],
+            })
 
-    //     // } else if (this.state.isConnected) {
-    //     } else if (ethereum.isConnected()) {
-    //         onboardButton.innerHTML = 'Connected'
-    //         onboardButton.disabled = true
-    //         // const onboarding = new MetaMaskOnboarding();
-    //         if (this.state.onboarding) {
-    //             // this.state.onboarding.stopOnboarding()
-    //             console.log('stopOnboarding');
-    //         }
-    //     } else {
-    //         onboardButton.innerHTML = 'Connect'
-    //         onboardButton.onclick = this.onClickConnect();
-    //         onboardButton.disabled = false
-    //     }
-    // }
+            const permissionRequestAnswer = await this.getPermissionsDisplayString(permissionsArray);
+            console.log('permissionRequestAnswer : ' + permissionRequestAnswer);
+            permissionsResult.innerHTML = permissionRequestAnswer;
 
-    // /**
-    //  * Connected Status
-    // */
+        } catch (err) {
+            console.error(err)
+            permissionsResult.innerHTML = `Error: ${err.message}`
+        }
+    }
 
-    // async onClickInstall(){
-    //     const onboardButton = document.getElementById('connectButton');
-    //     onboardButton.innerHTML = 'Onboarding in progress'
-    //     onboardButton.disabled = true
-    //     // const onboarding = new MetaMaskOnboarding();
-    //     // this.state.onboarding.startOnboarding();
-    // }
-
-    // async onClickConnect() {
-    //     try {
-    //         const newAccounts = await ethereum.request({
-    //             method: 'eth_requestAccounts',
-    //         });
-
-    //         this.setState({
-    //             accounts : newAccounts
-    //         });
-    //         // handleNewAccounts(newAccounts)
-    //     } catch (error) {
-    //         console.error(error)
-    //     }
-    // }
-    // /**
-    //  * Permissions
-    // */
-
-    // async requestPermissions(){
-
-    //     try {
-    //         const permissionsArray = await ethereum.request({
-    //           method: 'wallet_requestPermissions',
-    //           params: [{ eth_accounts: {} }],
-    //         })
-
-    //         const permissionRequestAnswer = await this.getPermissionsDisplayString(permissionsArray);
-    //         console.log('permissionRequestAnswer : ' + permissionRequestAnswer);
-    //         permissionsResult.innerHTML = permissionRequestAnswer;
-
-    //     } catch (err) {
-    //         console.error(err)
-    //         permissionsResult.innerHTML = `Error: ${err.message}`
-    //     }
-    // }
-
-    // async getPermissionsDisplayString (permissionsArray) {
-    //     if (permissionsArray.length === 0) {
-    //       return 'No permissions found.'
-    //     }
-    //     const permissionNames = permissionsArray.map((perm) => perm.parentCapability);
-    //     return permissionNames.reduce((acc, name) => `${acc}${name}, `, '').replace(/, $/u, '')
-    // }
-
-    
-
+    async getPermissionsDisplayString (permissionsArray) {
+        if (permissionsArray.length === 0) {
+          return 'No permissions found.'
+        }
+        const permissionNames = permissionsArray.map((perm) => perm.parentCapability);
+        return permissionNames.reduce((acc, name) => `${acc}${name}, `, '').replace(/, $/u, '')
+    }
 
     render(){
 
         const { isMetaMask, isConnected } = this.props;
         // console.log('PageLoader Render : ' + isMetaMask + ' ' + isConnected);
-
-        // if((this.state.isMetaMask===true) && (this.state.isConnected===true)) return null;
-        if( (isMetaMask && isConnected) ) return null;
-        
-        else{
+               
+        if(!(isMetaMask && isConnected)) {
         
             return (
 
@@ -253,6 +192,8 @@ class PageLoader extends Component {
                 </div>
             );
         }
+
+        return null;
         
     }
 }
