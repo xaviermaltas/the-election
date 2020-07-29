@@ -115,6 +115,8 @@ class PageLoader extends Component {
             console.log('permissionRequestAnswer : ' + permissionRequestAnswer);
             permissionsResult.innerHTML = permissionRequestAnswer;
 
+            window.location.reload();
+
         } catch (err) {
             console.error(err)
             permissionsResult.innerHTML = `Error: ${err.message}`

@@ -9,10 +9,8 @@
 .card {
     margin-bottom: 20px;
 }
-  
-/*Logo*/
 
-/* .pageloader {
+.pageloader {
     width: 100%;
     height: auto;
 }
@@ -20,9 +18,9 @@
 .spinner-loading-container {
     width: 100%;
     height: auto;
-}  */
+}  
 
-/* #pageloader {
+#pageloader {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,5 +33,5 @@
   
 #mm-logo {
     width: 100%;
-} */
-
+}
+ */
