@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import Panel from "./components/Panel";
-import Jumbotron from "./Jumbotron";
+import Jumbotron from "./components/Jumbotron";
 import ElectionContract from "./election";
 import { VotationService } from "./votationService";
 import { ToastContainer } from "react-toastr";
 import detectEthereumProvider from '@metamask/detect-provider';
+
+import PageLoader from "./components/PageLoader";
 
 
 const converter = (web3) =>{
@@ -13,7 +15,28 @@ const converter = (web3) =>{
     }
 }
 
-function NetworkAreaUI({network}){
+const isMetaMaskInstalled = () => {
+    const { ethereum } = window
+    return Boolean(ethereum && ethereum.isMetaMask)
+}
+
+const isMetaMaskConnected = () => {
+    const {ethereum} = window
+    return Boolean(ethereum && ethereum.isConnected())
+}
+
+const Button = ({ onClick }) => (
+    <button onClick={onClick} type="button">
+    Toggle Show
+    </button>
+);
+
+const toggleShow = () => {
+    alert('hey');
+};
+
+
+function NetworkAreaUI({network, chain}){
     return (
       <div id = "network" className = "row">
         <div className = "col-sm">
@@ -22,6 +45,12 @@ function NetworkAreaUI({network}){
             <div className="netInformation row">
               <div className="col-sm">
                 <p><strong> Network : </strong> {network} </p>
+              </div>
+            </div>
+
+            <div className="chainInformation row">
+              <div className="col-sm">
+                <p><strong> Chain : </strong> {chain} </p>
               </div>
             </div>
   
@@ -97,9 +126,10 @@ function VotationResultsUI({candidates}){
 
 
 
-
 export class App extends Component {
-
+    /**
+     * Component 
+    */
     constructor(props) {
         super(props);
 
@@ -123,6 +153,7 @@ export class App extends Component {
         */
             const provider = await detectEthereumProvider();
             // if (typeof window.ethereum !== 'undefined') {
+
             if (provider) {
                 // From now on, this should always be true:
                 // provider === window.ethereum
@@ -138,7 +169,13 @@ export class App extends Component {
                         this.setState({
                             isConnected : true
                         })
+
                     }
+                    // else {
+                    //     this.setState({
+                    //         isConnected : false
+                    //     })
+                    // }
                 }
             } else {
                 console.log('Please install MetaMask!');
@@ -154,15 +191,15 @@ export class App extends Component {
                 this.toEther = converter(this.web3);
 
             //Creation of an instance of VotationService class
-            this.votationService = new VotationService(this.electionInstance);
+                this.votationService = new VotationService(this.electionInstance);
 
 
         /**
          * Accounts
         */
-            const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-            const account = accounts[0];
-
+            
+       const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+       const account = accounts[0];
             ethereum.on('accountsChanged', 
                 async function (accounts) {
                     this.setState({
@@ -194,7 +231,17 @@ export class App extends Component {
             // console.log('Network version : ' + networkVersion);
             // console.log('ChainID : ' + chainId);
 
-            ethereum.on('networkChanged', 
+            window.ethereum.on( 'chainChanged',
+                async function (chainId) {
+                    this.setState({
+                        chain : chainId
+                    }, async () => {
+                        await this.load();
+                    });
+                }.bind(this)
+            );
+
+            window.ethereum.on( 'networkChanged', 
                 async function (networkVersion) {
                     this.setState({
                         network : networkVersion[0]
@@ -205,6 +252,7 @@ export class App extends Component {
                     window.location.reload();
                 }.bind(this)
             );
+
 
 
         /**
@@ -233,7 +281,10 @@ export class App extends Component {
 
     }
 
-
+    /**
+     * Functions
+    */
+   
     async getAccount(){
         var account = ethereum.selectedAddress;
         if(account){
@@ -255,6 +306,15 @@ export class App extends Component {
             network : networkVersion
         });
         // console.log('Network version ' + ethereum.networkVersion);
+    }
+
+    async getChain(){
+        const chainId = window.ethereum.chainId;
+
+        this.setState({
+            chain : chainId
+        });
+        // console.log('Chain ' + ethereum.networkVersion);
     }
 
     async getBalance(){
@@ -326,6 +386,7 @@ export class App extends Component {
     async load(){
         await this.getAccount();
         await this.getNetwork();
+        await this.getChain();
         // await this.getBalance();
         await this.getCandidates();
         await this.getVoterStatus();
@@ -337,62 +398,79 @@ export class App extends Component {
         alert("Index: " + y[x].index + " is " + y[x].text);
         // var candidateId = $('#candidatesSelect').val();
         console.log("Index selected " + y[x].index);
-    }
+    }   
+
+
+    
     
 
     render() {
         // debugger;
-        return <React.Fragment>
-           {/* <JumbotronUI /> */}
-           <Jumbotron title={"Voting Application"}></Jumbotron>
 
-            <NetworkAreaUI 
-                network={this.state.network}
-            />
+        // if(!(ethereum.isMetaMask && ethereum.isConnected())) {
+        //     return <PageLoader isMetaMask={ethereum.isMetaMask} isConnected={ethereum.isConnected()}></PageLoader>
+        // }        
 
-            <UserInformationUI 
-                account={this.state.account} 
-                balance={this.state.balance} 
-                voterStatus={this.state.voterStatus} 
-            />
+        if(!(this.state.isMetamask && this.state.isConnected)) {
+            return <PageLoader isMetaMask={this.state.isMetamask} isConnected={this.state.isConnected}></PageLoader>
+        }
 
-            <VotationResultsUI 
-                candidates={this.state.candidates} 
-            />
 
-            <div id = "votationArea" className = "row">
+        return (
+                    
+            <React.Fragment>
+                
+                <Jumbotron title={"Voting Application"}></Jumbotron>
 
-                <div className = "col-sm">
+                <NetworkAreaUI 
+                    network={this.state.network}
+                    chain={this.state.chain}
+                />
 
-                    <Panel title ="Votation Area">
+                <UserInformationUI 
+                    account={this.state.account} 
+                    balance={this.state.balance} 
+                    voterStatus={this.state.voterStatus} 
+                />
 
-                        <form>
-                            <div className="form-group">
-                                <label>Select Candidate</label>
-                                <select className="form-control" id="candidatesSelect">
-                                    {
-                                        this.state.candidates.map( (candidate, i) => {
-                                            return <option value = {i} key = {i}>{candidate.name}</option>
-                                        })
+                <VotationResultsUI 
+                    candidates={this.state.candidates} 
+                />
 
-                                    }
-                                </select>
-                            </div>
+                <div id = "votationArea" className = "row">
 
-                            <button type = "button" className="btn btn-primary" onClick={() => this.voteForACandidate()}>Vote</button>
+                    <div className = "col-sm">
 
-                        </form>
+                        <Panel title ="Votation Area">
 
-                    </Panel>
+                            <form>
+                                <div className="form-group">
+                                    <label>Select Candidate</label>
+                                    <select className="form-control" id="candidatesSelect">
+                                        {
+                                            this.state.candidates.map( (candidate, i) => {
+                                                return <option value = {i} key = {i}>{candidate.name}</option>
+                                            })
+
+                                        }
+                                    </select>
+                                </div>
+                                
+                                <button type = "button" className="btn btn-primary" onClick={() => this.voteForACandidate()}>Vote</button>
+
+                            </form>
+
+                        </Panel>
+
+                    </div>
 
                 </div>
 
-            </div>
+                <ToastContainer ref= { (input) => this.container = input }
+                    className = "toast-top-right"
+                />
 
-            <ToastContainer ref= { (input) => this.container = input }
-                className = "toast-top-right"
-            />
-
-        </React.Fragment>
+            </React.Fragment>
+        );
     }
 }
