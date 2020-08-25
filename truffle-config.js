@@ -33,6 +33,14 @@ module.exports = {
       //type: "quorum",
     },
 
+    /* WINDOWS PRIVATENETWORK PROJECT */
+    windowsPrivateNet: {
+      host: "localhost", //our network is running on localhost
+      port: 8543, // port where your blockchain is running
+      network_id: 9354,
+      // from: "da7e565f43edeea1a7fac8655f6a89a5d86a19d2" // use the account-id generated during the setup process
+      gas: 20000000
+    },
 
     /*1 NODE GETH */
     nodeGeth:{
@@ -45,6 +53,14 @@ module.exports = {
     /* ETH3 NODES NET */
     eth3nodesNet:{
       host:"localhost",
+      port:8501,
+      network_id:1515,
+      gas:2000000
+    },
+
+    /* UPF ETH3 NODES NET */
+    upfNet:{
+      host:"10.55.1.17",
       port:8501,
       network_id:1515,
       gas:2000000
@@ -80,7 +96,6 @@ module.exports = {
       from: "0x0e596199ea5c6d3cbc713183e7514be022a19385"
     },
 
-
     /* QUORUM NETWORK PROJECT */
     quorumNet: {
       host: "localhost",
@@ -89,15 +104,6 @@ module.exports = {
       gasPrice: 0x0,
       gas: 0xfffff,
       type: "quorum" // needed for Truffle to support Quorum
-    },
-
-    /* WINDOWS PRIVATENETWORK PROJECT */
-    windowsPrivateNet: {
-      host: "localhost", //our network is running on localhost
-      port: 8543, // port where your blockchain is running
-      network_id: 9354,
-      // from: "da7e565f43edeea1a7fac8655f6a89a5d86a19d2" // use the account-id generated during the setup process
-      gas: 20000000
     }
 
   },
